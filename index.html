@@ -1,29 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minimal Blog</title>
     <style>
+        /* Variables for theme colors */
+        :root {
+            --bg-color: #f9f9f9;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --muted-text: #777777;
+            --border-color: #dddddd;
+            --header-color: #444444;
+            --accent-color: #4CAF50;
+            --accent-hover: #45a049;
+            --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Dark theme colors */
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --card-bg: #2a2a2a;
+            --text-color: #e0e0e0;
+            --muted-text: #a0a0a0;
+            --border-color: #444444;
+            --header-color: #f0f0f0;
+            --accent-color: #5CDF60;
+            --accent-hover: #4CBA50;
+            --shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
         /* Base styles */
+        * {
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            color: #333;
+            color: var(--text-color);
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f9f9f9;
+            background-color: var(--bg-color);
         }
 
         header {
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid var(--border-color);
             padding-bottom: 20px;
             margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
         h1 {
-            color: #444;
+            color: var(--header-color);
+            margin: 0;
         }
 
         /* Navigation */
@@ -40,105 +82,236 @@
 
         nav ul li a {
             text-decoration: none;
-            color: #555;
+            color: var(--muted-text);
             font-weight: bold;
+            transition: color 0.2s;
         }
 
         nav ul li a:hover {
-            color: #000;
+            color: var(--accent-color);
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow);
+            height: 40px;
+            width: 40px;
         }
 
         /* Blog posts */
         .blog-post {
-            background-color: #fff;
-            border-radius: 5px;
-            padding: 20px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
             margin-bottom: 30px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-post:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 5px;
+            background-color: var(--accent-color);
         }
 
         .blog-post h2 {
             margin-top: 0;
+            color: var(--header-color);
         }
 
         .post-meta {
-            color: #777;
+            color: var(--muted-text);
             font-size: 0.9em;
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .post-meta i {
+            margin-right: 5px;
+        }
+
+        .post-content {
+            margin-bottom: 20px;
         }
 
         /* New post form */
         #new-post-form {
-            background-color: #fff;
-            border-radius: 5px;
-            padding: 20px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
             margin-bottom: 30px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
             display: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #new-post-form:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 5px;
+            background-color: var(--accent-color);
         }
 
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
+            color: var(--header-color);
         }
 
         input, textarea {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
         }
 
         textarea {
             height: 200px;
+            resize: vertical;
         }
 
         button {
-            background-color: #4CAF50;
+            background-color: var(--accent-color);
             color: white;
             border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
+            padding: 12px 20px;
+            border-radius: 6px;
             cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: var(--accent-hover);
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+
+        .delete-btn:hover {
+            background-color: #d32f2f;
         }
 
         /* Status message */
         .status {
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
             text-align: center;
+            font-weight: bold;
         }
 
         .success {
-            background-color: #dff0d8;
-            color: #3c763d;
+            background-color: rgba(76, 175, 80, 0.2);
+            color: var(--accent-color);
         }
 
         .error {
-            background-color: #f2dede;
-            color: #a94442;
+            background-color: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+
+        /* About section */
+        #about-section {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            display: none;
+        }
+
+        #about-section:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 5px;
+            background-color: var(--accent-color);
         }
 
         footer {
-            margin-top: 30px;
+            margin-top: 40px;
             text-align: center;
-            color: #777;
+            color: var(--muted-text);
             font-size: 0.9em;
             padding-top: 20px;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .blog-post, #new-post-form, #about-section {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .header-content {
+                width: 100%;
+                justify-content: space-between;
+                margin-bottom: 15px;
+            }
+            
+            nav ul {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            nav ul li {
+                margin-right: 0;
+            }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Minimal Blog</h1>
+        <div class="header-content">
+            <h1>Minimal Blog</h1>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                ☀️
+            </button>
+        </div>
         <nav>
             <ul>
                 <li><a href="#" id="home-link">Home</a></li>
@@ -151,25 +324,32 @@
     <main>
         <div id="status-message" class="status" style="display: none;"></div>
 
-        <div id="about-section" style="display: none;">
+        <div id="about-section">
             <h2>About This Blog</h2>
             <p>Welcome to Minimal Blog! This is a simple, clean blogging platform where you can share your thoughts and ideas.</p>
             <p>To get started, click on "New Post" to create your first blog entry.</p>
+            <p>Features include:</p>
+            <ul>
+                <li>Clean, minimalist design</li>
+                <li>Dark mode support</li>
+                <li>Local storage to save your posts</li>
+                <li>Responsive layout for all devices</li>
+            </ul>
         </div>
 
         <form id="new-post-form">
             <h2>Create New Post</h2>
             <div>
                 <label for="post-title">Title:</label>
-                <input type="text" id="post-title" required>
+                <input type="text" id="post-title" required placeholder="Enter your post title">
             </div>
             <div>
                 <label for="post-author">Author:</label>
-                <input type="text" id="post-author" required>
+                <input type="text" id="post-author" required placeholder="Your name">
             </div>
             <div>
                 <label for="post-content">Content:</label>
-                <textarea id="post-content" required></textarea>
+                <textarea id="post-content" required placeholder="Write your thoughts here..."></textarea>
             </div>
             <button type="submit" id="publish-button">Publish Post</button>
         </form>
@@ -193,6 +373,8 @@
         const aboutSection = document.getElementById('about-section');
         const statusMessage = document.getElementById('status-message');
         const publishButton = document.getElementById('publish-button');
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
 
         // Sample blog posts
         let posts = [
@@ -209,6 +391,27 @@
                 content: 'Blogging is a great way to share your ideas, build an audience, and express yourself. To create a new blog post, simply click on the "New Post" link in the navigation menu, fill out the form, and click "Publish Post". Your new post will appear at the top of the home page.'
             }
         ];
+
+        // Theme toggle functionality
+        function toggleTheme() {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            htmlElement.setAttribute('data-theme', newTheme);
+            themeToggle.innerHTML = newTheme === 'light' ? '☀️' : '🌙';
+            
+            // Save theme preference
+            localStorage.setItem('blogTheme', newTheme);
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('blogTheme');
+            if (savedTheme) {
+                htmlElement.setAttribute('data-theme', savedTheme);
+                themeToggle.innerHTML = savedTheme === 'light' ? '☀️' : '🌙';
+            }
+        }
 
         // Show status message
         function showStatus(message, isSuccess = true) {
@@ -246,6 +449,20 @@
             }
         }
 
+        // Format date nicely
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) {
+                return dateString; // Return original if invalid
+            }
+            
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
         // Render all blog posts
         function renderPosts() {
             blogPosts.innerHTML = '';
@@ -258,12 +475,16 @@
             posts.forEach((post, index) => {
                 const postElement = document.createElement('article');
                 postElement.className = 'blog-post';
+                
+                // Format the date nicely
+                const formattedDate = formatDate(post.date);
+                
                 postElement.innerHTML = `
                     <h2>${post.title}</h2>
                     <div class="post-meta">
-                        <span>By ${post.author} on ${post.date}</span>
+                        <span>By ${post.author} on ${formattedDate}</span>
                     </div>
-                    <div class="post-content">
+<div class="post-content">
                         ${post.content.replace(/\n/g, '<br>')}
                     </div>
                     <button class="delete-btn" data-index="${index}">Delete</button>
@@ -356,6 +577,9 @@
             }
         });
 
+        // Theme toggle event listener
+        themeToggle.addEventListener('click', toggleTheme);
+
         // Additional listener for the publish button
         publishButton.addEventListener('click', function(e) {
             console.log("Publish button clicked");
@@ -367,6 +591,7 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             console.log("DOM fully loaded");
+            loadTheme();
             loadPosts();
             
             // Show posts initially
@@ -376,6 +601,7 @@
         });
 
         // Initialize immediately as well
+        loadTheme();
         loadPosts();
     </script>
 </body>
