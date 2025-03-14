@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Blog</title>
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #444;
+        }
+
+        /* Navigation */
+        nav ul {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #555;
+            font-weight: bold;
+        }
+
+        nav ul li a:hover {
+            color: #000;
+        }
+
+        /* Blog posts */
+        .blog-post {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .blog-post h2 {
+            margin-top: 0;
+        }
+
+        .post-meta {
+            color: #777;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        /* New post form */
+        #new-post-form {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        textarea {
+            height: 200px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Status message */
+        .status {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #777;
+            font-size: 0.9em;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Minimal Blog</h1>
+        <nav>
+            <ul>
+                <li><a href="#" id="home-link">Home</a></li>
+                <li><a href="#" id="new-post-link">New Post</a></li>
+                <li><a href="#" id="about-link">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div id="status-message" class="status" style="display: none;"></div>
+
+        <div id="about-section" style="display: none;">
+            <h2>About This Blog</h2>
+            <p>Welcome to Minimal Blog! This is a simple, clean blogging platform where you can share your thoughts and ideas.</p>
+            <p>To get started, click on "New Post" to create your first blog entry.</p>
+        </div>
+
+        <form id="new-post-form">
+            <h2>Create New Post</h2>
+            <div>
+                <label for="post-title">Title:</label>
+                <input type="text" id="post-title" required>
+            </div>
+            <div>
+                <label for="post-author">Author:</label>
+                <input type="text" id="post-author" required>
+            </div>
+            <div>
+                <label for="post-content">Content:</label>
+                <textarea id="post-content" required></textarea>
+            </div>
+            <button type="submit" id="publish-button">Publish Post</button>
+        </form>
+
+        <section id="blog-posts">
+            <!-- Sample posts will appear here -->
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Minimal Blog. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // DOM elements
+        const homeLink = document.getElementById('home-link');
+        const newPostLink = document.getElementById('new-post-link');
+        const aboutLink = document.getElementById('about-link');
+        const newPostForm = document.getElementById('new-post-form');
+        const blogPosts = document.getElementById('blog-posts');
+        const aboutSection = document.getElementById('about-section');
+        const statusMessage = document.getElementById('status-message');
+        const publishButton = document.getElementById('publish-button');
+
+        // Sample blog posts
+        let posts = [
+            {
+                title: 'Welcome to Minimal Blog',
+                author: 'Admin',
+                date: 'March 14, 2025',
+                content: 'This is your first blog post! Edit or delete this post and start blogging right away. This minimal blogging platform includes all the essential features you need to start sharing your thoughts with the world.'
+            },
+            {
+                title: 'Getting Started with Blogging',
+                author: 'Admin',
+                date: 'March 13, 2025',
+                content: 'Blogging is a great way to share your ideas, build an audience, and express yourself. To create a new blog post, simply click on the "New Post" link in the navigation menu, fill out the form, and click "Publish Post". Your new post will appear at the top of the home page.'
+            }
+        ];
+
+        // Show status message
+        function showStatus(message, isSuccess = true) {
+            statusMessage.textContent = message;
+            statusMessage.className = isSuccess ? 'status success' : 'status error';
+            statusMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        // Load posts from localStorage if available
+        function loadPosts() {
+            const savedPosts = localStorage.getItem('blogPosts');
+            if (savedPosts) {
+                try {
+                    posts = JSON.parse(savedPosts);
+                } catch (e) {
+                    console.error("Error loading posts from localStorage:", e);
+                    localStorage.removeItem('blogPosts');
+                }
+            }
+            renderPosts();
+        }
+
+        // Save posts to localStorage
+        function savePosts() {
+            try {
+                localStorage.setItem('blogPosts', JSON.stringify(posts));
+                return true;
+            } catch (e) {
+                console.error("Error saving posts to localStorage:", e);
+                return false;
+            }
+        }
+
+        // Render all blog posts
+        function renderPosts() {
+            blogPosts.innerHTML = '';
+            
+            if (posts.length === 0) {
+                blogPosts.innerHTML = '<div class="blog-post"><h2>No Posts Yet</h2><p>Create your first post by clicking on "New Post".</p></div>';
+                return;
+            }
+            
+            posts.forEach((post, index) => {
+                const postElement = document.createElement('article');
+                postElement.className = 'blog-post';
+                postElement.innerHTML = `
+                    <h2>${post.title}</h2>
+                    <div class="post-meta">
+                        <span>By ${post.author} on ${post.date}</span>
+                    </div>
+                    <div class="post-content">
+                        ${post.content.replace(/\n/g, '<br>')}
+                    </div>
+                    <button class="delete-btn" data-index="${index}">Delete</button>
+                `;
+                blogPosts.appendChild(postElement);
+            });
+
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    posts.splice(index, 1);
+                    if (savePosts()) {
+                        showStatus('Post deleted successfully');
+                        renderPosts();
+                    } else {
+                        showStatus('Error deleting post', false);
+                    }
+                });
+            });
+        }
+
+        // Navigation event listeners
+        homeLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            blogPosts.style.display = 'block';
+            newPostForm.style.display = 'none';
+            aboutSection.style.display = 'none';
+        });
+
+        newPostLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            blogPosts.style.display = 'none';
+            newPostForm.style.display = 'block';
+            aboutSection.style.display = 'none';
+        });
+
+        aboutLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            blogPosts.style.display = 'none';
+            newPostForm.style.display = 'none';
+            aboutSection.style.display = 'block';
+        });
+
+        // Form submission
+        newPostForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log("Form submitted");
+            
+            const titleInput = document.getElementById('post-title');
+            const authorInput = document.getElementById('post-author');
+            const contentInput = document.getElementById('post-content');
+            
+            const title = titleInput.value.trim();
+            const author = authorInput.value.trim();
+            const content = contentInput.value.trim();
+            
+            if (!title || !author || !content) {
+                showStatus('Please fill in all fields', false);
+                return;
+            }
+            
+            // Create new post object
+            const newPost = {
+                title,
+                author,
+                date: new Date().toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }),
+                content
+            };
+            
+            // Add to posts array
+            posts.unshift(newPost);
+            
+            if (savePosts()) {
+                // Reset form and show posts
+                newPostForm.reset();
+                blogPosts.style.display = 'block';
+                newPostForm.style.display = 'none';
+                
+                showStatus('Post published successfully!');
+                
+                // Render updated posts
+                renderPosts();
+            } else {
+                showStatus('Error saving post', false);
+            }
+        });
+
+        // Additional listener for the publish button
+        publishButton.addEventListener('click', function(e) {
+            console.log("Publish button clicked");
+            // The form submit event should handle this, but adding extra handler
+            // to ensure the form submission works
+            newPostForm.dispatchEvent(new Event('submit'));
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM fully loaded");
+            loadPosts();
+            
+            // Show posts initially
+            blogPosts.style.display = 'block';
+            newPostForm.style.display = 'none';
+            aboutSection.style.display = 'none';
+        });
+
+        // Initialize immediately as well
+        loadPosts();
+    </script>
+</body>
+</html>
